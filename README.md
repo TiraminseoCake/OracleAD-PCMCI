@@ -1,4 +1,4 @@
-# OracleAD-PCMCI: Causal Prior-Guided Anomaly Detection
+# CASAD: Causal Prior-Guided Anomaly Detection
 
 ## Overview
 
