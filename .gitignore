@@ -2,7 +2,11 @@ __pycache__/
 *.pyc
 runs/
 logs/
+results/
 *.log
 *.npz
+*.npy
+/data
 data/
+data_npz/
 nohup.out
