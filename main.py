@@ -196,9 +196,16 @@ def main():
     args = parse_args()
     cfg, _ = load_config(args)
 
-    set_devices(cfg.VISIBLE_DEVICES)
+    # Only apply cfg.VISIBLE_DEVICES when the env is not already restricted by
+    # a caller (e.g., scripts/run_parallel.py sets CUDA_VISIBLE_DEVICES per
+    # subprocess for GPU sharding). Overriding it here would clobber the
+    # per-subprocess assignment and force every job onto GPU 0.
+    if 'CUDA_VISIBLE_DEVICES' not in os.environ:
+        set_devices(cfg.VISIBLE_DEVICES)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f'device: {device}', flush=True)
+    print(f'device: {device}  '
+          f'(CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<unset>")})',
+          flush=True)
 
     mkdir(cfg.RESULT_DIR)
     with open(os.path.join(cfg.RESULT_DIR, 'config.yaml'), 'w') as f:

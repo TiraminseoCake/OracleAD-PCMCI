@@ -124,9 +124,15 @@ def main():
                          'entity).')
     ap.add_argument('--warmup_threads', type=int, default=16,
                     help='BLAS threads for each serial warmup call (default: 16).')
+    ap.add_argument('--entities', default='',
+                    help='Comma-separated entity subset. Overrides the '
+                         'built-in DATASETS registry. Useful for restarting '
+                         'a partial run without re-doing completed entities.')
     a = ap.parse_args()
 
     cfg_yaml, entities = DATASETS[a.dataset]
+    if a.entities:
+        entities = [e.strip() for e in a.entities.split(',') if e.strip()]
     gpus = [g.strip() for g in a.gpus.split(',') if g.strip()]
     seeds = [int(s) for s in a.seeds.split(',') if s.strip()]
 
